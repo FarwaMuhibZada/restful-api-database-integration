@@ -16,9 +16,9 @@ app.get('/', (req, res) => {
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find({});
-    res.status(200).json(users);
+    return res.status(200).json(users); // Explicit return to ensure a value is returned
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message }); // Return in case of error
   }
 });
 
@@ -31,10 +31,10 @@ app.get('/users/:id', async (req, res) => {
     if (user) {
       return res.status(200).json(user);
     }
-    // No need for an `else` after `return`
-    res.status(404).json({ message: `No user found with ID ${id}` });
+    // Ensure a return statement even in this branch
+    return res.status(404).json({ message: `No user found with ID ${id}` });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message }); // Return in case of error
   }
 });
 
@@ -49,9 +49,9 @@ app.put('/users/:id', async (req, res) => {
     }
 
     const updatedUser = await User.findById(id);
-    res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser); // Explicit return for success
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message }); // Return in case of error
   }
 });
 
@@ -59,9 +59,9 @@ app.put('/users/:id', async (req, res) => {
 app.post('/users', async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.status(200).json(user);
+    return res.status(200).json(user); // Ensure return after success
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message }); // Return in case of error
   }
 });
 
@@ -75,9 +75,9 @@ app.delete('/users/:id', async (req, res) => {
       return res.status(404).json({ message: `Cannot find any user with ID ${id}` });
     }
 
-    res.status(200).json(user);
+    return res.status(200).json(user); // Explicit return for success
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message }); // Return in case of error
   }
 });
 
