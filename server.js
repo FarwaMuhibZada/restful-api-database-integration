@@ -35,7 +35,7 @@ app.put('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, req.body);
-    // we cannot find any product in database
+    // we cannot find any user in database
     if (!user) {
       return res.status(404).json({ message: `cannot find any product with ID ${id}` })
     }
@@ -54,6 +54,21 @@ app.post('/users', async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message })
+  }
+});
+
+// Delete or Remove user from database
+app.delete('/users/:id', async(req, res) =>{
+  try {
+      const {id} = req.params;
+      const user = await User.findByIdAndDelete(id);
+      if(!user){
+          return res.status(404).json({message: `cannot find any product with ID ${id}`})
+      }
+      res.status(200).json(user);
+      
+  } catch (error) {
+      res.status(500).json({message: error.message})
   }
 });
 
