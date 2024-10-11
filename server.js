@@ -10,6 +10,7 @@ app.use(express.json());
 // Home Route
 app.get('/', (req, res) => {
   res.send('Hello NODE API');
+  return; // Ensuring return in all paths
 });
 
 // Fetch all users
@@ -19,8 +20,8 @@ app.get('/users', async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
-    return null; // Ensuring consistent return
   }
+  return; // Ensuring consistent return
 });
 
 // Fetch a user by ID
@@ -28,11 +29,15 @@ app.get('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    res.status(200).json(user);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ message: `No user found with ID ${id}` });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    return null; // Ensuring consistent return
   }
+  return; // Ensuring consistent return
 });
 
 // Update a user by ID
@@ -50,8 +55,8 @@ app.put('/users/:id', async (req, res) => {
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
-    return null; // Ensuring consistent return
   }
+  return; // Ensuring consistent return
 });
 
 // Create a new user
@@ -60,9 +65,9 @@ app.post('/users', async (req, res) => {
     const user = await User.create(req.body);
     res.status(200).json(user);
   } catch (error) {
-    // Replacing console.log with error logging
     res.status(500).json({ message: error.message });
   }
+  return; // Ensuring consistent return
 });
 
 // Delete a user by ID
@@ -78,21 +83,19 @@ app.delete('/users/:id', async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
-    return null; // Ensuring consistent return
   }
+  return; // Ensuring consistent return
 });
 
 // MongoDB connection and server start
 const dbUrl = 'mongodb+srv://admin:pwd1234@my-cluster.maxsh.mongodb.net/Node-API?retryWrites=true&w=majority&appName=my-cluster';
 mongoose.connect(dbUrl)
   .then(() => {
-    // Replacing console.log with a logging function or removing
-    console.info('Connected to MongoDB'); // Less intrusive than console.log
+    console.info('Connected to MongoDB');
     app.listen(3000, () => {
       console.info('Node API app is running on port 3000');
     });
   })
   .catch((error) => {
-    // Replacing console.log with error logging
     console.error(error);
   });
