@@ -20,7 +20,6 @@ app.get('/users', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Explicitly return to satisfy ESLint
 });
 
 // Fetch a user by ID
@@ -31,11 +30,11 @@ app.get('/users/:id', async (req, res) => {
 
     if (user) {
       return res.status(200).json(user);
-    } else {
-      return res.status(404).json({ message: `No user found with ID ${id}` });
     }
+    // No need for an `else` after `return`
+    res.status(404).json({ message: `No user found with ID ${id}` });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -50,9 +49,9 @@ app.put('/users/:id', async (req, res) => {
     }
 
     const updatedUser = await User.findById(id);
-    return res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -60,9 +59,9 @@ app.put('/users/:id', async (req, res) => {
 app.post('/users', async (req, res) => {
   try {
     const user = await User.create(req.body);
-    return res.status(200).json(user);
+    res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -76,9 +75,9 @@ app.delete('/users/:id', async (req, res) => {
       return res.status(404).json({ message: `Cannot find any user with ID ${id}` });
     }
 
-    return res.status(200).json(user);
+    res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
