@@ -10,7 +10,6 @@ app.use(express.json());
 // Home Route
 app.get('/', (req, res) => {
   res.send('Hello NODE API');
-  return; // Ensuring return in all paths
 });
 
 // Fetch all users
@@ -21,7 +20,6 @@ app.get('/users', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Ensuring consistent return
 });
 
 // Fetch a user by ID
@@ -29,15 +27,15 @@ app.get('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
+    
     if (user) {
       res.status(200).json(user);
     } else {
-      return res.status(404).json({ message: `No user found with ID ${id}` });
+      res.status(404).json({ message: `No user found with ID ${id}` });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Ensuring consistent return
 });
 
 // Update a user by ID
@@ -46,7 +44,6 @@ app.put('/users/:id', async (req, res) => {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, req.body);
 
-    // If user is not found
     if (!user) {
       return res.status(404).json({ message: `Cannot find any user with ID ${id}` });
     }
@@ -56,7 +53,6 @@ app.put('/users/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Ensuring consistent return
 });
 
 // Create a new user
@@ -67,7 +63,6 @@ app.post('/users', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Ensuring consistent return
 });
 
 // Delete a user by ID
@@ -84,7 +79,6 @@ app.delete('/users/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-  return; // Ensuring consistent return
 });
 
 // MongoDB connection and server start
