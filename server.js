@@ -1,84 +1,92 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
-const User = require('./models/userModel')
+const User = require('./models/userModel');
+
+const app = express();
 app.use(express.json());
 
-//Routes
+// Routes
+
+// Home Route
 app.get('/', (req, res) => {
   res.send('Hello NODE API');
 });
 
-// fetch data from Node-API database using this route
+// Fetch all users
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find({});
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
-})
+});
 
-// get users by id 
+// Fetch a user by ID
 app.get('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
-})
+});
 
-// update or edit the user
+// Update a user by ID
 app.put('/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, req.body);
-    // we cannot find any user in database
+    
+    // If user is not found
     if (!user) {
-      return res.status(404).json({ message: `cannot find any product with ID ${id}` })
+      return res.status(404).json({ message: `Cannot find any user with ID ${id}` });
     }
+
     const updatedUser = await User.findById(id);
     res.status(200).json(updatedUser);
-
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
-})
+});
+
+// Create a new user
 app.post('/users', async (req, res) => {
   try {
-    const user = await User.create(req.body)
+    const user = await User.create(req.body);
     res.status(200).json(user);
-
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
 });
 
-// Delete or Remove user from database
-app.delete('/users/:id', async(req, res) =>{
+// Delete a user by ID
+app.delete('/users/:id', async (req, res) => {
   try {
-      const {id} = req.params;
-      const user = await User.findByIdAndDelete(id);
-      if(!user){
-          return res.status(404).json({message: `cannot find any product with ID ${id}`})
-      }
-      res.status(200).json(user);
-      
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      return res.status(404).json({ message: `Cannot find any user with ID ${id}` });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
-      res.status(500).json({message: error.message})
+    res.status(500).json({ message: error.message });
   }
 });
 
+// MongoDB connection and server start
 const dbUrl = 'mongodb+srv://admin:pwd1234@my-cluster.maxsh.mongodb.net/Node-API?retryWrites=true&w=majority&appName=my-cluster';
 mongoose.connect(dbUrl)
   .then(() => {
-    console.log('connected to MongoDB');
+    console.log('Connected to MongoDB');
     app.listen(3000, () => {
-      console.log(`Node API app is running on port 3000`);
+      console.log('Node API app is running on port 3000');
     });
-  }).catch((error) => {
-    console.log(error)
+  })
+  .catch((error) => {
+    console.log(error);
   });
