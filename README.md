@@ -97,11 +97,17 @@ curl -X DELETE http://localhost:3000/users/{id}
 ```
 ## Project Structure 📝
 ```bash
-├── models/
-│   └── userModel.js    # Mongoose schema for users
-├── index.js            # Main entry point for the application
-├── package.json        # Project dependencies and scripts
-└── README.md           # Project documentation
+/node-api-project
+│
+├── /models
+│   └── userModel.js        # Mongoose schema for the User
+│
+├── /routes
+│   └── userRoutes.js       # All routes related to users
+├── .gitignore               # Git ignore file (to exclude node_modules and .env)
+├── package.json             # Dependencies and project metadata
+├── server.js                # Main server file
+└── README.md                # Project documentation (optional)
 ```
 
 ## Author
